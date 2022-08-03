@@ -35,5 +35,5 @@ test('should not with obj input', () => {
 })
 
 test('should not with mixed input', () => {
-  expect(() => new CPF('3892127581993')).toThrow("Not a valid CPF")
+  expect(() => new CPF('34095951800293')).toThrow("Not a valid CPF")
 })
