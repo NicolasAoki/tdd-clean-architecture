@@ -1,12 +1,21 @@
 export default class CPF {
-  constructor(public number: any) {}
+  constructor(public number: any) {
+    if (!number || !number.length) throw new Error('A number must be given')
+    let cpf = number
+    cpf = this.removeCharactersFromCPF(number)
+    const sameDigits = this.hasEveryDigitEqual(cpf)
+    if (sameDigits) {
+      throw new Error ('A number must not repeat it self')
+    }
+    this.number = cpf
+  }
 
-  removeCharactersFromCPF() {
-    this.number = this.number
-    .replace('.','')
-    .replace('.','')
-    .replace('-','')
-    .replace(" ","");
+  removeCharactersFromCPF(cpf: any) {
+    return cpf
+      .replace('.','')
+      .replace('.','')
+      .replace('-','')
+      .replace(" ","");
   }
 
   verifyDigits() {
@@ -43,7 +52,15 @@ export default class CPF {
     }
   }
 
-  hasEveryDigitEqual() {
-    return this.number.split("").every((c: any) => c === this.number[0])
+  hasEveryDigitEqual(cpf: any) {
+    return cpf.split("").every((c: any) => c === cpf[0])
+  }
+
+  isValid() {
+    const validCPF = this.verifyDigits()
+    if (!validCPF) {
+      throw new Error('Not a valid CPF')
+    }
+    return validCPF
   }
 }

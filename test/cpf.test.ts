@@ -1,55 +1,44 @@
-import { validate } from "../src/cpf"
+import CPF from "../src/cpf.entity"
 
 test('should return true with a valid CPF with commas', () => {
-  const cpf = '389.212.758-19'
-  const result = validate(cpf)
-  expect(result).toBe(true)
+  const cpf = new CPF('389.212.758-19')
+  const isValidCpf = cpf.isValid()
+  expect(isValidCpf).toBe(true)
 })
 
 test('should return true with a valid CPF without commas', () => {
-  const cpf = '38921275819'
-  const result = validate(cpf)
-  expect(result).toBe(true)
+  const cpf = new CPF('38921275819')
+  const isValidCpf = cpf.isValid()
+  expect(isValidCpf).toBe(true)
 })
 
-test('should return false with a valid CPF', () => {
-  const cpf = '1000'
-  const result = validate(cpf)
-  expect(result).toBe(false)
+test('should throw error invalid CPF', () => {
+  const cpf = new CPF('1000')
+  expect(() => cpf.isValid()).toThrow("Not a valid CPF")
 })
 
 test('should not work with null input', () => {
-  const cpf = null
-  const result = validate(cpf)
-  expect(result).toBe(false)
+  expect(() => new CPF(null)).toThrow("A number must be given")
 })
 
 test('should not work with undefined input', () => {
-  const cpf = undefined
-  const result = validate(cpf)
-  expect(result).toBe(false)
+  expect(() => new CPF(undefined)).toThrow("A number must be given")
 })
 
 test('should not work with equal digits', () => {
-  const cpf = '11'
-  const result = validate(cpf)
-  expect(result).toBe(false)
+  expect(() => new CPF('11')).toThrow("A number must not repeat it self")
 })
 
-test('should enter dig < 2', () => {
-  const cpf = '389212758'
-  const result = validate(cpf)
-  expect(result).toBe(false)
+test('should return not a valid cpf', () => {
+  const cpf = new CPF('389212758')
+  expect(() => cpf.isValid()).toThrow("Not a valid CPF")
 })
 
 test('should not with obj input', () => {
-  const cpf = {}
-  const result = validate(cpf)
-  expect(result).toBe(false)
+  expect(() => new CPF({})).toThrow("A number must be given")
 })
 
 test('should not with mixed input', () => {
-  const cpf = '3892127581993'
-  const result = validate(cpf)
-  expect(result).toBe(false)
+  const cpf = new CPF('3892127581993')
+  expect(() => cpf.isValid()).toThrow("Not a valid CPF")
 })
