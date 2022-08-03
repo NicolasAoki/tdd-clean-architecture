@@ -7,6 +7,9 @@ export default class CPF {
     if (sameDigits) {
       throw new Error ('A number must not repeat it self')
     }
+    if (!this.verifyDigits(cpf)) {
+      throw new Error('Not a valid CPF') 
+    }
     this.number = cpf
   }
 
@@ -18,7 +21,7 @@ export default class CPF {
       .replace(" ","");
   }
 
-  verifyDigits() {
+  verifyDigits(cpf: any) {
     try{
       let d1, d2;  
       let dg1, dg2, rest;  
@@ -27,8 +30,8 @@ export default class CPF {
       d1 = d2 = 0;  
       dg1 = dg2 = rest = 0;  
           
-      for (let nCount = 1; nCount < this.number.length -1; nCount++) {  
-      digito = parseInt(this.number.substring(nCount -1, nCount));  							
+      for (let nCount = 1; nCount < cpf.length -1; nCount++) {  
+      digito = parseInt(cpf.substring(nCount -1, nCount));  							
       d1 = d1 + ( 11 - nCount ) * digito;  
       d2 = d2 + ( 12 - nCount ) * digito;  
       };  
@@ -43,7 +46,7 @@ export default class CPF {
       } else {
         dg2 = 11 - rest;
       }
-      let nDigVerific = this.number.substring(this.number.length-2, this.number.length);  
+      let nDigVerific = cpf.substring(cpf.length-2, cpf.length);  
       nDigResult = "" + dg1 + "" + dg2;  
       return nDigVerific == nDigResult;
     }catch (e){
@@ -54,13 +57,5 @@ export default class CPF {
 
   hasEveryDigitEqual(cpf: any) {
     return cpf.split("").every((c: any) => c === cpf[0])
-  }
-
-  isValid() {
-    const validCPF = this.verifyDigits()
-    if (!validCPF) {
-      throw new Error('Not a valid CPF')
-    }
-    return validCPF
   }
 }

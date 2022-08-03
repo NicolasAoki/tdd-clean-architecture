@@ -1,20 +1,17 @@
 import CPF from "../src/cpf.entity"
 
 test('should return true with a valid CPF with commas', () => {
-  const cpf = new CPF('389.212.758-19')
-  const isValidCpf = cpf.isValid()
-  expect(isValidCpf).toBe(true)
+  const cpf = new CPF('409.595.180-02')
+  expect(cpf.number).toBe('40959518002')
 })
 
 test('should return true with a valid CPF without commas', () => {
-  const cpf = new CPF('38921275819')
-  const isValidCpf = cpf.isValid()
-  expect(isValidCpf).toBe(true)
+  const cpf = new CPF('40959518002')
+  expect(cpf.number).toBe('40959518002')
 })
 
 test('should throw error invalid CPF', () => {
-  const cpf = new CPF('1000')
-  expect(() => cpf.isValid()).toThrow("Not a valid CPF")
+  expect(() => new CPF('1000')).toThrow("Not a valid CPF")
 })
 
 test('should not work with null input', () => {
@@ -30,8 +27,7 @@ test('should not work with equal digits', () => {
 })
 
 test('should return not a valid cpf', () => {
-  const cpf = new CPF('389212758')
-  expect(() => cpf.isValid()).toThrow("Not a valid CPF")
+  expect(() => new CPF('389212758')).toThrow("Not a valid CPF")
 })
 
 test('should not with obj input', () => {
@@ -39,6 +35,5 @@ test('should not with obj input', () => {
 })
 
 test('should not with mixed input', () => {
-  const cpf = new CPF('3892127581993')
-  expect(() => cpf.isValid()).toThrow("Not a valid CPF")
+  expect(() => new CPF('3892127581993')).toThrow("Not a valid CPF")
 })
