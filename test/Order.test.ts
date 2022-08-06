@@ -30,3 +30,9 @@ test("Deve criar um pedido com 3 itens com cupom de desconto", function () {
 	const total = order.getTotal();
 	expect(total).toBe(4872);
 });
+
+test("Deve rejeitar um cupom de desconto expirado", function () {
+	const order = new Order("886.634.854-68");
+  const coupon = new Coupon("VALE20", 20, new Date('2022-01-01 10:00:00'))
+  expect(() => order.addCoupon(coupon)).toThrow('Expired coupon')
+});
