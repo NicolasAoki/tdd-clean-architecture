@@ -14,7 +14,18 @@ export default class Order {
 	}
 
 	addItem (item: Item, quantity: number) {
+		if (quantity < 0) {
+			throw new Error('Can not add negative amount')
+		}
+		if (this.hasDuplicatedItem(item.idItem)) {
+			throw new Error('Duplicated item')
+		}
 		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
+	}
+
+	hasDuplicatedItem (itemId: number) {
+		const duplicateItem = this.orderItems.find(orderItem => orderItem.idItem === itemId)
+		return duplicateItem
 	}
 
 	addCoupon (coupon: Coupon) {

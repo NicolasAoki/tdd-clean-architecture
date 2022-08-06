@@ -36,3 +36,17 @@ test("Deve rejeitar um cupom de desconto expirado", function () {
   const coupon = new Coupon("VALE20", 20, new Date('2022-01-01 10:00:00'))
   expect(() => order.addCoupon(coupon)).toThrow('Expired coupon')
 });
+
+test("Deve rejeitar a quantidade de item negativa", function () {
+	const order = new Order("886.634.854-68");
+  const item = new Item(1, "Guitarra", 1000);
+	expect(() => order.addItem(item, -1)).toThrow('Can not add negative amount');
+});
+
+test("Deve rejeitar pedido com id duplicado", function () {
+	const order = new Order("886.634.854-68");
+  const item = new Item(1, "Guitarra", 1000);
+  const duplicateItem = new Item(1, "Guitarra", 1000);
+  order.addItem(item, 1);
+  expect(() => order.addItem(duplicateItem, 1)).toThrow('Duplicated item');
+});
