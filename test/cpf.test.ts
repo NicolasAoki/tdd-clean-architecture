@@ -1,39 +1,34 @@
-import CPF from "../src/cpf.entity"
+import Cpf from "../src/Cpf";
 
-test('should return true with a valid CPF with commas', () => {
-  const cpf = new CPF('409.595.180-02')
-  expect(cpf.number).toBe('40959518002')
-})
+const validCPFs = [
+	"886.634.854-68",
+	"47308766870"
+];
 
-test('should return true with a valid CPF without commas', () => {
-  const cpf = new CPF('40959518002')
-  expect(cpf.number).toBe('40959518002')
-})
+test.each(validCPFs)("Deve validar um CPF válido", function (value) {
+	const cpf = new Cpf(value);
+	expect(cpf).toBeDefined();
+	expect(cpf.getValue()).toBe(value);
+});
 
-test('should throw error invalid CPF', () => {
-  expect(() => new CPF('1000')).toThrow("Not a valid CPF")
-})
+const CPFsWithSameDigits = [
+	"111.111.111-11",
+	"222.222.222-22",
+	"333.333.333-33"
+];
 
-test('should not work with null input', () => {
-  expect(() => new CPF(null)).toThrow("A number must be given")
-})
+test.each(CPFsWithSameDigits)("Deve validar um CPF inválido com todos os dígitos iguais", function (cpf) {
+	expect(() => new Cpf(cpf)).toThrow(new Error("Cpf Inválido"));
+});
 
-test('should not work with undefined input', () => {
-  expect(() => new CPF(undefined)).toThrow("A number must be given")
-})
+test("Deve validar um CPF inválido com o tamanho maior", function () {
+	expect(() => new Cpf("111.111.111-1111")).toThrow(new Error("Cpf Inválido"));
+});
 
-test('should not work with equal digits', () => {
-  expect(() => new CPF('11')).toThrow("A number must not repeat it self")
-})
+test("Deve validar um CPF inválido com o tamanho menor", function () {
+	expect(() => new Cpf("111.111.111")).toThrow(new Error("Cpf Inválido"));
+});
 
-test('should return not a valid cpf', () => {
-  expect(() => new CPF('389212758')).toThrow("Not a valid CPF")
-})
-
-test('should not with obj input', () => {
-  expect(() => new CPF({})).toThrow("A number must be given")
-})
-
-test('should not with mixed input', () => {
-  expect(() => new CPF('34095951800293')).toThrow("Not a valid CPF")
-})
+test("Deve validar um CPF vazio", function () {
+	expect(() => new Cpf("")).toThrow(new Error("Cpf Inválido"));
+});
