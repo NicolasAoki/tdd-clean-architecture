@@ -50,3 +50,4 @@ test("Deve rejeitar pedido com id duplicado", function () {
   order.addItem(item, 1);
   expect(() => order.addItem(duplicateItem, 1)).toThrow('Duplicated item');
 });
+
