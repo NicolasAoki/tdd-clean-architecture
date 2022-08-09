@@ -1,38 +1,36 @@
 import Coupon from "./Coupon";
 import Cpf from "./Cpf";
+import FreightCalculator from "./FreightCalculator";
 import Item from "./Item";
+import OrderCode from "./OrderCode";
 import OrderItem from "./OrderItem";
 
 export default class Order {
 	orderItems: OrderItem[];
 	cpf: Cpf;
 	coupon?: Coupon;
+	freight = 0;
+	private code: OrderCode;
 
-	constructor (cpf: string) {
+	constructor (cpf: string, readonly date: Date = new Date(), readonly sequence: number = 1) {
 		this.cpf = new Cpf(cpf);
 		this.orderItems = [];
+		this.code = new OrderCode(date, sequence);
 	}
 
 	addItem (item: Item, quantity: number) {
-		if (quantity < 0) {
-			throw new Error('Can not add negative amount')
-		}
-		if (this.hasDuplicatedItem(item.idItem)) {
-			throw new Error('Duplicated item')
-		}
+		if (this.orderItems.some(orderItem => orderItem.idItem === item.idItem)) throw new Error("Duplicated item");
 		this.orderItems.push(new OrderItem(item.idItem, item.price, quantity));
-	}
-
-	hasDuplicatedItem (itemId: number) {
-		const duplicateItem = this.orderItems.find(orderItem => orderItem.idItem === itemId)
-		return duplicateItem
+		this.freight += FreightCalculator.calculate(item) * quantity;
 	}
 
 	addCoupon (coupon: Coupon) {
-		if (coupon.isExpired()) {
-			throw new Error('Expired coupon')
-		}
+		if (coupon.isExpired(this.date)) return;
 		this.coupon = coupon;
+	}
+
+	getCode () {
+		return this.code.value;
 	}
 
 	getTotal () {
@@ -42,6 +40,9 @@ export default class Order {
 		}, 0);
 		if (this.coupon) {
 			total -= this.coupon.getDiscount(total);
+		}
+		if (this.freight) {
+			total += this.freight;
 		}
 		return total;
 	}
